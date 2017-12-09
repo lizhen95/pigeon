@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="30">
+    <Appenders>
+        <Console name="ConsoleError" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d [%t] %-5p [%c{2}] %m%n" />
+            <Filters>
+                <BurstFilter level="error" rate="25" maxBurst="100" />
+            </Filters>
+        </Console>
+        <Console name="ConsoleWarn" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d [%t] %-5p [%c{2}] %m%n" />
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </Console>
+        <RollingFile name="FileInfo"
+                     fileName="${sys:pigeon.log.dir}/pigeon.${sys:app.name}.log"
+                     filePattern="${sys:pigeon.log.dir}/pigeon.${sys:app.name}.log.%d{yyyy-MM-dd}.gz">
+            <PatternLayout pattern="%d [%t] %-5p [%c{2}] %m%n" />
+            <TimeBasedTriggeringPolicy />
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="ACCEPT" />
+            </Filters>
+        </RollingFile>
+        <RollingFile name="AccessInfo"
+                     fileName="${sys:pigeon.log.dir}/pigeon.${sys:app.name}.access.log"
+                     filePattern="${sys:pigeon.log.dir}/pigeon.${sys:app.name}.access.log.%d{yyyy-MM-dd}.gz">
+            <PatternLayout
+                    pattern="%d [%t] %-5p [%c{2}] %m%n" />
+            <TimeBasedTriggeringPolicy />
+            <Filters>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </RollingFile>
+        <Async name="AsyncAccessInfo">
+            <AppenderRef ref="AccessInfo" level="info" />
+        </Async>
+        <Async name="AsyncConsoleError">
+            <AppenderRef ref="ConsoleError" level="error" />
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.dianping.pigeon" additivity="true">
+            <AppenderRef ref="AsyncConsoleError" level="error" />
+            <AppenderRef ref="ConsoleWarn" level="warn" />
+            <AppenderRef ref="FileInfo" level="info" />
+        </Logger>
+        <Logger name="pigeon-access" additivity="true">
+            <AppenderRef ref="AsyncAccessInfo" level="info" />
+        </Logger>
+        <root level="info">
+        </root>
+    </Loggers>
+</Configuration>
