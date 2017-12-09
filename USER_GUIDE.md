@@ -109,7 +109,7 @@ pigeon在运行时可能会依赖以下jar包，如果有必要，需要应用�
 
 ### 通过maven构建项目
 ```bash
-git clone https://github.com/dianping/pigeon.git pigeon-parent
+git clone https://github.com/lizhen95/pigeon.git pigeon-parent
 
 cd pigeon-parent
 
